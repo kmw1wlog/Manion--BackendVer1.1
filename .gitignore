@@ -1,0 +1,25 @@
+﻿# 가상 환경
+venv/
+.venv/
+env/
+ENV/
+
+# 환경 변수 파일
+.env
+.env.*
+!.env.example
+
+# 캐시 파일
+__pycache__/
+*.py[cod]
+*.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 로그 파일
+*.log
+logs/
+
+# 업로드된 파일들
+uploads/
