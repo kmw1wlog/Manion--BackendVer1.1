@@ -1,7 +1,11 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import health, auth, uploads, jobs, community
+
+# 환경 변수에서 PORT 가져오기
+port = int(os.environ.get("PORT", 8000))
 
 app = FastAPI(
     title="AI-MANIM API",
@@ -23,7 +27,8 @@ app.add_middleware(
 async def root():
     return {
         "ok": True,
-        "route": "/"
+        "route": "/",
+        "port": port  # 현재 사용 중인 포트 반환
     }
 
 # API 라우터들 추가
@@ -37,10 +42,15 @@ app.include_router(community.router, prefix="/api/community", tags=["커뮤니�
 @app.on_event("startup")
 async def startup_event():
     # 초기화 작업 (DB 연결 등)
-    print("AI-MANIM API 서버 시작")
+    print(f"AI-MANIM API 서버 시작 (포트: {port})")
 
 # 앱 종료 이벤트
 @app.on_event("shutdown")
 async def shutdown_event():
     # 종료 작업 (리소스 정리 등)
     print("AI-MANIM API 서버 종료")
+
+# 직접 실행할 경우 uvicorn 서버 시작
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)
