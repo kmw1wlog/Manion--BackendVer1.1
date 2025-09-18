@@ -23,3 +23,12 @@ logs/
 
 # 업로드된 파일들
 uploads/
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
