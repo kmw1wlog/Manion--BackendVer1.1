@@ -1,0 +1,151 @@
+📦 .mni 데이터타입 (MVP → Full)
+🧩 1) 공통 원칙
+
+schema_version: "1.0-mvp", "1.0" 등으로 세분화
+
+하위 호환성: MVP ⊂ Full (MVP 파일은 Full 런타임에서 그대로 실행 가능)
+
+결정성: 핵심 필드만으로 hash_key 산출 → 캐시·증분 렌더 기준
+
+⚡ 2) MVP 스키마
+2.1 필드 정의
+
+필수
+
+schema_version: string
+
+problem: { id, statement, metadata }
+
+proof_tape: array<string> 또는 array<object>{step, expr_in, expr_out}
+
+visual: { type: "ManimScene", sections[] }
+
+verification: { sympy: string|object }
+
+선택
+
+build: { options, hash_key, created_at }
+
+notes: string
+
+2.2 제약(Validation)
+
+visual.sections[].steps[].action ∈ { CreateAxes, PlotFunction, HighlightPoint, CreateTex, FadeIn, Indicate }
+
+verification.sympy는 실행 가능한 최소 코드 문자열 또는 {code, status} 객체
+
+2.3 MVP 예시
+{
+  "schema_version": "1.0",
+  "problem": {
+    "id": "QF001",
+    "statement": "함수 y = x^2 - 4x + 3의 꼭짓점을 구하라",
+    "metadata": { "subject": "수학", "unit": "이차함수", "difficulty": "중간", "time_estimate_min": 3 }
+  },
+  "proof_tape": [
+    {"step":1,"rule":"complete_square","expr_in":"x^2-4x+3","expr_out":"(x-2)^2-1"},
+    {"step":2,"rule":"vertex","expr_in":"(x-2)^2-1","expr_out":"(2,-1)"}
+  ],
+  "visual": {
+    "type": "ManimScene",
+    "sections": [
+      {
+        "section_name": "Graph",
+        "steps": [
+          { "action": "CreateAxes", "x_range": [-2,6], "y_range": [-2,10] },
+          { "action": "PlotFunction", "function": "x**2 - 4*x + 3" },
+          { "action": "HighlightPoint", "point": [2, -1], "color": "yellow" }
+        ]
+      }
+    ]
+  },
+  "verification": {
+    "sympy": { "code":"...", "status":"pass", "artifacts":["vx=2","vy=-1"] }
+  },
+  "build": {
+    "options": { "fps": 30, "resolution": "1400x800", "theme":"dark" },
+    "hash_key": "QF001:9b7c...:v1",
+    "created_at": "2025-09-04T07:15:00Z"
+  }
+}
+
+🚀 3) Full 스키마
+3.1 필수 필드 (MVP + α)
+
+problem (확장된 메타 포함)
+
+structure.tot (추론 트리), structure.pot (계산 코드)
+
+proof_tape (객체 배열 {step,rule,expr_in,expr_out,comment})
+
+visual (ManimScene/GeoGebra/ThreeJS 허용)
+
+verification (sympy + wolfram_alpha 등 멀티엔진)
+
+assets, build, publish, metrics, i18n, provenance
+
+3.2 제약
+
+structure.pot.lang ∈ {"python","sympy"}
+
+visual.type ∈ {"ManimScene","GeoGebra","ThreeJS"}
+
+build.hash_key = 문제ID + 정규화수식 + visual + build.options 기반 해시
+
+3.3 Full 예시 (요약형)
+{
+  "schema_version": "1.0",
+  "problem": { ... },
+  "structure": {
+    "tot": { "nodes":[...], "edges":[...] },
+    "pot": { "lang": "python", "cells": ["...", "..."] }
+  },
+  "proof_tape": [
+    {"step":1,"rule":"complete_square","expr_in":"x^2-4x+3","expr_out":"(x-2)^2-1","comment":"표준형"},
+    {"step":2,"rule":"vertex","expr_in":"(x-2)^2-1","expr_out":"(2,-1)"}
+  ],
+  "visual": { ... },
+  "verification": {
+    "sympy": { "code":"...", "status":"pass","artifacts":["vx=2","vy=-1"] },
+    "wolfram_alpha": { "query":"vertex of y=x^2-4x+3", "used": false }
+  },
+  "build": { "options": {...}, "hash_key": "...", "created_at": "..." },
+  "publish": { "targets": [ { "type":"web", "url":"...", "meta":{...} } ] },
+  "metrics": { "verify_pass": true, "render_ms": 1250, "cache_hit": false }
+}
+
+♻️ 4) MVP → Full 전환 규칙
+
+그대로 승격: proof_tape: string[] → object[]
+
+추가 확장: structure, publish, metrics, i18n, provenance, assets
+
+해시 안정성: hash_key는 렌더 영향 필드만 포함
+
+📋 5) 타입 체크리스트
+
+problem.id: ^[A-Za-z0-9._-]{3,64}$
+
+proof_tape: MVP=string[] / Full=object[]
+
+visual.sections[].steps[]: {action:string, ...payload}
+
+verification.sympy: MVP=string / Full={code,status,artifacts[]}
+
+structure.pot.lang: "python"|"sympy"
+
+build.options: {fps,resolution,theme}
+
+metrics: 숫자/불리언 위주
+
+🛠 6) 구현 순서 (MVP → Full)
+
+MVP 실행 경로: problem + proof_tape + visual + verification.sympy
+
+템플릿 확장: visual 액션 추가 & 공통 스타일 도입
+
+검증 강화: sympy 객체화 + 외부 CAS fallback
+
+구조화 도입: structure.tot/pot 추가, ProofTape 연결
+
+운영 확장: build.hash_key, publish, metrics, i18n, provenance 도입
