@@ -1,0 +1,186 @@
+{
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/signup",
+      "urlExpr": "/api/auth/signup",
+      "bodyKeys": ["email", "password", "name"],
+      "file": "routers/auth.py"
+    },
+    {
+      "method": "POST",
+      "path": "/signin",
+      "urlExpr": "/api/auth/signin",
+      "bodyKeys": ["email", "password"],
+      "file": "routers/auth.py"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/google",
+      "urlExpr": "/api/auth/google",
+      "bodyKeys": ["token"],
+      "file": "routers/auth.py"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/kakao",
+      "urlExpr": "/api/auth/kakao",
+      "bodyKeys": ["token"],
+      "file": "routers/auth.py"
+    },
+    {
+      "method": "GET",
+      "path": "/user/history",
+      "urlExpr": "/api/user/history",
+      "bodyKeys": [],
+      "file": "routers/user.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/user/history/problem/{problemId}",
+      "urlExpr": "/api/user/history/problem/{problemId}",
+      "bodyKeys": [],
+      "file": "routers/user.py"
+    },
+    {
+      "method": "PUT",
+      "path": "/user/history/problem/{problemId}/title",
+      "urlExpr": "/api/user/history/problem/{problemId}/title",
+      "bodyKeys": ["title"],
+      "file": "routers/user.py"
+    },
+    {
+      "method": "GET",
+      "path": "/problem/{problemId}",
+      "urlExpr": "/api/problem/{problemId}",
+      "bodyKeys": [],
+      "file": "routers/problem.py"
+    },
+    {
+      "method": "POST",
+      "path": "/upload",
+      "urlExpr": "/api/upload",
+      "bodyKeys": ["image", "title"],
+      "file": "routers/upload.py"
+    },
+    {
+      "method": "POST",
+      "path": "/evaluations",
+      "urlExpr": "/api/evaluations",
+      "bodyKeys": ["rating", "feedback", "videoUrl", "timestamp"],
+      "file": "routers/evaluations.py"
+    },
+    {
+      "method": "GET",
+      "path": "/community/posts/{boardType}",
+      "urlExpr": "/api/community/posts/{boardType}",
+      "bodyKeys": [],
+      "file": "routers/community.py"
+    },
+    {
+      "method": "POST",
+      "path": "/community/posts",
+      "urlExpr": "/api/community/posts",
+      "bodyKeys": ["content", "author", "boardType", "userId", "isNotice"],
+      "file": "routers/community.py"
+    },
+    {
+      "method": "POST",
+      "path": "/community/posts/{postId}/like",
+      "urlExpr": "/api/community/posts/{postId}/like",
+      "bodyKeys": ["action"],
+      "file": "routers/community.py"
+    },
+    {
+      "method": "POST",
+      "path": "/community/posts/{postId}/reply",
+      "urlExpr": "/api/community/posts/{postId}/reply",
+      "bodyKeys": ["content", "author", "isAdmin", "userId"],
+      "file": "routers/community.py"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/problems",
+      "urlExpr": "/api/admin/problems",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/problems/{problemId}",
+      "urlExpr": "/api/admin/problems/{problemId}",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/evaluations",
+      "urlExpr": "/api/admin/evaluations",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/evaluations/{evaluationId}",
+      "urlExpr": "/api/admin/evaluations/{evaluationId}",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/stats",
+      "urlExpr": "/api/admin/stats",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/posts/{postId}",
+      "urlExpr": "/api/admin/posts/{postId}",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/posts/{postId}/replies/{replyId}",
+      "urlExpr": "/api/admin/posts/{postId}/replies/{replyId}",
+      "bodyKeys": [],
+      "file": "routers/admin.py"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "urlExpr": "/api/health",
+      "bodyKeys": [],
+      "file": "routers/diag.py"
+    },
+    {
+      "method": "GET",
+      "path": "/diag/supabase",
+      "urlExpr": "/api/diag/supabase",
+      "bodyKeys": [],
+      "file": "routers/diag.py"
+    },
+    {
+      "method": "GET",
+      "path": "/me",
+      "urlExpr": "/api/me",
+      "bodyKeys": [],
+      "file": "routers/auth.py"
+    },
+    {
+      "method": "POST",
+      "path": "/manim/generate",
+      "urlExpr": "/api/manim/generate",
+      "bodyKeys": ["script"],
+      "file": "routers/manim.py"
+    },
+    {
+      "method": "POST",
+      "path": "/storage/signed-url",
+      "urlExpr": "/api/storage/signed-url",
+      "bodyKeys": ["path", "from"],
+      "file": "routers/storage.py"
+    }
+  ]
+}
