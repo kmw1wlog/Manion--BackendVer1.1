@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # 기본값 설정
 export PORT="${PORT:-8000}"
