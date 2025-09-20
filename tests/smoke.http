@@ -1,0 +1,68 @@
+### ================ 로컬 테스트 ================ ###
+
+### 헬스체크 (로컬)
+GET http://localhost:8000/api/health
+
+### 사용자 정보 조회 - 토큰 없음 (401 기대)
+GET http://localhost:8000/api/me
+
+### 사용자 정보 조회 - 토큰 있음 (200 기대)
+GET http://localhost:8000/api/me
+Authorization: Bearer {{supabase_access_token}}
+
+### 스토리지 서명된 URL 요청 (로컬)
+POST http://localhost:8000/api/storage/signed-url
+Authorization: Bearer {{supabase_access_token}}
+Content-Type: application/json
+
+{
+  "path": "test/sample-image.jpg",
+  "from_bucket": "mni-files"
+}
+
+### 작업 목록 조회 (로컬)
+GET http://localhost:8000/api/jobs
+
+### 작업 생성 (로컬)
+POST http://localhost:8000/api/jobs
+Content-Type: application/json
+
+{
+  "problem_text": "함수 y = x^2 - 4x + 3의 꼭짓점을 구하라"
+}
+
+### ================ 배포 테스트 (Railway) ================ ###
+
+@railway_url = https://manion-backendver11-production.up.railway.app
+
+### 헬스체크 (Railway)
+GET {{railway_url}}/api/health
+
+### 사용자 정보 조회 - 토큰 없음 (401 기대)
+GET {{railway_url}}/api/me
+
+### 사용자 정보 조회 - 토큰 있음 (200 기대)
+GET {{railway_url}}/api/me
+Authorization: Bearer {{supabase_access_token}}
+
+### 스토리지 서명된 URL 요청 (Railway)
+POST {{railway_url}}/api/storage/signed-url
+Authorization: Bearer {{supabase_access_token}}
+Content-Type: application/json
+
+{
+  "path": "test/sample-image.jpg",
+  "from_bucket": "mni-files"
+}
+
+### 작업 목록 조회 (Railway)
+GET {{railway_url}}/api/jobs
+
+### 작업 생성 (Railway)
+POST {{railway_url}}/api/jobs
+Content-Type: application/json
+
+{
+  "problem_text": "함수 y = x^2 - 4x + 3의 꼭짓점을 구하라"
+}
+
