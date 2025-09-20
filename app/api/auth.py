@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from typing import Dict, Any
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -26,9 +27,12 @@ async def google_authorize():
     """
     구글 OAuth 인증 시작
     """
-    # 실제 구현에서는 구글 OAuth 인증 URL로 리디렉션
+    # Supabase 콜백 URL 및 Google Client ID 사용
+    callback_url = f"{settings.SUPABASE_URL}/auth/v1/callback"
+    auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={settings.GOOGLE_CLIENT_ID}&redirect_uri={callback_url}&response_type=code&scope=email+profile"
+    
     return {
-        "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?dummy_param=value"
+        "auth_url": auth_url
     }
 
 @router.get("/google/callback")
@@ -42,26 +46,43 @@ async def google_callback(code: str = None, error: str = None):
             detail=f"OAuth 인증 오류: {error}"
         )
     
-    # 실제 구현에서는 코드를 토큰으로 교환하고 사용자 정보를 가져옴
-    return {
-        "access_token": "dummy_google_token_12345",
-        "token_type": "bearer",
-        "user": {
-            "id": "google_user_001",
-            "name": "구글 사용자",
-            "email": "google@example.com",
-            "avatar_url": "https://i.pravatar.cc/150?img=2"
+    if not code:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="인증 코드가 없습니다"
+        )
+    
+    try:
+        # TODO: 실제 구현에서는 코드를 토큰으로 교환하고 사용자 정보를 가져옴
+        # 현재는 Supabase Auth를 통해 이루어지므로 더미 데이터 반환
+        
+        return {
+            "access_token": "dummy_google_token_12345",
+            "token_type": "bearer",
+            "user": {
+                "id": "google_user_001",
+                "name": "구글 사용자",
+                "email": "google@example.com",
+                "avatar_url": "https://i.pravatar.cc/150?img=2"
+            }
         }
-    }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Google OAuth 처리 중 오류 발생: {str(e)}"
+        )
 
 @router.get("/kakao/authorize")
 async def kakao_authorize():
     """
     카카오 OAuth 인증 시작
     """
-    # 실제 구현에서는 카카오 OAuth 인증 URL로 리디렉션
+    # Supabase 콜백 URL 및 Kakao Client ID 사용
+    callback_url = f"{settings.SUPABASE_URL}/auth/v1/callback"
+    auth_url = f"https://kauth.kakao.com/oauth/authorize?client_id={settings.KAKAO_CLIENT_ID}&redirect_uri={callback_url}&response_type=code"
+    
     return {
-        "auth_url": "https://kauth.kakao.com/oauth/authorize?dummy_param=value"
+        "auth_url": auth_url
     }
 
 @router.get("/kakao/callback")
@@ -75,17 +96,31 @@ async def kakao_callback(code: str = None, error: str = None):
             detail=f"OAuth 인증 오류: {error}"
         )
     
-    # 실제 구현에서는 코드를 토큰으로 교환하고 사용자 정보를 가져옴
-    return {
-        "access_token": "dummy_kakao_token_12345",
-        "token_type": "bearer",
-        "user": {
-            "id": "kakao_user_001",
-            "name": "카카오 사용자",
-            "email": "kakao@example.com",
-            "avatar_url": "https://i.pravatar.cc/150?img=3"
+    if not code:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="인증 코드가 없습니다"
+        )
+    
+    try:
+        # TODO: 실제 구현에서는 코드를 토큰으로 교환하고 사용자 정보를 가져옴
+        # 현재는 Supabase Auth를 통해 이루어지므로 더미 데이터 반환
+        
+        return {
+            "access_token": "dummy_kakao_token_12345",
+            "token_type": "bearer",
+            "user": {
+                "id": "kakao_user_001",
+                "name": "카카오 사용자",
+                "email": "kakao@example.com",
+                "avatar_url": "https://i.pravatar.cc/150?img=3"
+            }
         }
-    }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Kakao OAuth 처리 중 오류 발생: {str(e)}"
+        )
 
 @router.get("/me")
 async def get_current_user():

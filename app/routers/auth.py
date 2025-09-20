@@ -115,20 +115,54 @@ async def google_auth(request: OAuthTokenRequest) -> Dict[str, Any]:
     """
     구글 OAuth 인증 처리
     """
-    return {
-        "message": "POST /auth/google ok",
-        "note": "TODO: Implement Google OAuth integration with Supabase"
-    }
+    try:
+        # 실제 구현에서는 Google OAuth 토큰으로 Supabase 인증
+        # 현재는 Supabase가 OAuth 처리를 담당
+        async with httpx.AsyncClient() as client:
+            headers = {
+                "apikey": settings.SUPABASE_ANON_KEY,
+                "Content-Type": "application/json"
+            }
+            
+            # TODO: 실제 구현 완료 필요
+            # Google ID 토큰을 Supabase로 전달하여 인증
+            # 현재는 더미 데이터 반환
+            return {
+                "message": "Google OAuth 처리 구현 예정",
+                "client_id": settings.GOOGLE_CLIENT_ID
+            }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Google OAuth 처리 중 오류 발생: {str(e)}"
+        )
 
 @router.post("/kakao")
 async def kakao_auth(request: OAuthTokenRequest) -> Dict[str, Any]:
     """
     카카오 OAuth 인증 처리
     """
-    return {
-        "message": "POST /auth/kakao ok",
-        "note": "TODO: Implement Kakao OAuth integration with Supabase"
-    }
+    try:
+        # 실제 구현에서는 Kakao OAuth 토큰으로 Supabase 인증
+        # 현재는 Supabase가 OAuth 처리를 담당
+        async with httpx.AsyncClient() as client:
+            headers = {
+                "apikey": settings.SUPABASE_ANON_KEY,
+                "Content-Type": "application/json"
+            }
+            
+            # TODO: 실제 구현 완료 필요
+            # Kakao 액세스 토큰을 Supabase로 전달하여 인증
+            # 현재는 더미 데이터 반환
+            return {
+                "message": "Kakao OAuth 처리 구현 예정",
+                "client_id": settings.KAKAO_CLIENT_ID
+            }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Kakao OAuth 처리 중 오류 발생: {str(e)}"
+        )
 
 @router.get("/me")
 async def get_me(user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
